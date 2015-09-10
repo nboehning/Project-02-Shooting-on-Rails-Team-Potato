@@ -6,12 +6,12 @@ public class EditorMovement : EditorWindow
 {
 
     //Bezier Curve Variables
-    public bool bezierCurve = false;
-    public Vector3 curveStart, curveEnd;
-	public Vector3 tanStart, tanEnd;
-    public Color drawColor;
-    public Texture2D drawTexture;
-    public float width;
+    static bool bezierCurve = false;
+    static Vector3 curveStart, curveEnd;
+    static Vector3 tanStart, tanEnd;
+    static Color drawColor;
+    static Texture2D drawTexture;
+    static float width;
 
     //Straight Line Variables
 
