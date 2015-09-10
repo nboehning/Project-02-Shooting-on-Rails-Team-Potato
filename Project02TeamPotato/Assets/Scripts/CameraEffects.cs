@@ -1,57 +1,72 @@
 ﻿using UnityEngine;
-//using System;
 using System.Collections;
+using System.Timers;
 
 public class CameraEffects : MonoBehaviour {
 
+	public int shakeSeconds = 2;
+	public int shakeIntensity = 2;
+	public bool turnOnShaking = false;
+
 	private Vector3 originalCameraPosition;
-	private Camera myCamera;
-	private Rect cameraRect;
-	bool switchFrames = true;
-	private float randomValue;
+	private bool shakeTurnedOn = false;
+	private float randomValueX;
+	private float randomValueY;
+	private int shakeMilliSec;
+	private Timer shakeTimer = new Timer();
 
-	// Use this for initialization
-	void Start ()
+	void Awake()
 	{
-		originalCameraPosition = transform.localPosition;
-		Debug.Log("Camera Position: " + originalCameraPosition);
-		myCamera = GetComponentInParent<Camera>();
-		cameraRect = myCamera.rect;
-		Debug.Log("Camera Rect: " + cameraRect.ToString());
-//		Debug.Log("Camera Rect: " + myCamera.rect.ToString());
-
+		shakeMilliSec = shakeSeconds > 0 ? shakeSeconds * 1000 : 1000;
+		shakeTimer.Enabled = false;
+		shakeTimer.AutoReset = false;
+		shakeTimer.Interval = shakeMilliSec;
+		shakeTimer.Elapsed += new ElapsedEventHandler(ShakeTimeOutEvent);
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		switchFrames = !switchFrames;
-
-		if (switchFrames)
+		if (turnOnShaking)
 		{
-			randomValue = 0.3f * Random.value;
-			transform.localPosition = new Vector3(originalCameraPosition.x + randomValue,
-			                                      originalCameraPosition.y + randomValue, originalCameraPosition.z);
-//			randomValue = 0.1f;
-//			transform.localPosition = new Vector3(originalCameraPosition.x + randomValue,
-//			                                      originalCameraPosition.y + randomValue, originalCameraPosition.z);
-//			randomValue = 0.3f * Random.value;
-//			transform.localPosition = new Vector3(originalCameraPosition.x + randomValue,
-//			                                      originalCameraPosition.y + randomValue, 0);
-//			myCamera.rect = new Rect(randomValue, 0f, 1f - randomValue * 2f, 1f);
+			if (shakeTurnedOn)
+				ShakeCamera();
+			else
+				StartShakingCamera();
 		}
 		else
-			transform.localPosition = originalCameraPosition;
-// myCamera.rect = cameraRect;
+		{
+			if (shakeTurnedOn)
+				StopShakingCamera();
+		}
+	}
+	
+	private void StartShakingCamera()
+	{
+		originalCameraPosition = transform.localPosition;
+		shakeMilliSec = shakeSeconds > 0 ? shakeSeconds * 1000 : 1000;
+		shakeTimer.Interval = shakeMilliSec;
+		shakeTimer.Start();
+		shakeTurnedOn = true;
+	}
+	
+	private void StopShakingCamera()
+	{
+		shakeTurnedOn = false;
+		transform.localPosition = originalCameraPosition;
+	}
+	
+	private void ShakeCamera()
+	{
+		randomValueX = 0.3f * shakeIntensity * (Random.value - 0.5f);
+		randomValueY = 0.3f * shakeIntensity * (Random.value - 0.5f);
+		transform.localPosition = new Vector3(originalCameraPosition.x + randomValueX,
+		                                      originalCameraPosition.y + randomValueY, originalCameraPosition.z);
+	}
 
-
-//		if (Input.GetButtonDown ("Jump"))
-//		{
-//			// choose the margin randomly
-//			float margin = Random.value;
-//			var margin = Random.Range (0.0, 0.3);
-			// setup the rectangle
-//			camera.rect = Rect (margin, 0, 1 - margin * 2, 1);
-//		}
+	private void ShakeTimeOutEvent(object source, ElapsedEventArgs e)
+	{
+		shakeTimer.Enabled = false;
+		turnOnShaking = false;
 	}
 }
