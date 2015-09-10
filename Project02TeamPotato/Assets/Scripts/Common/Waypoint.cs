@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Waypoint {
+public class Waypoint : MonoBehaviour
+{
 
 	// Use this for initialization
 	void Start ()
