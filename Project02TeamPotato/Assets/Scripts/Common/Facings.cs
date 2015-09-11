@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Facings : Waypoint
+public class Facings
 {
     //float xRotation;
     //float yRotation;

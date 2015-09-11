@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Timers;
 
-public class CameraEffects : Waypoint {
+public class CameraEffects {
 
 	//public int shakeSeconds = 2;
 	//public int shakeIntensity = 2;
