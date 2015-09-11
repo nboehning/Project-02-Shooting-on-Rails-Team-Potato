@@ -2,10 +2,21 @@
 using System.Collections;
 using System.Timers;
 
+public enum cameraTypes
+{
+	SHAKE,
+	SPLATTER,
+	FADE,
+	WAIT
+};
+
 public class CameraEffects : Waypoint {
 
-	//public int shakeSeconds = 2;
-	//public int shakeIntensity = 2;
+	public cameraTypes camType;
+	public float shakeSeconds;
+	public int shakeIntensity;
+	public float waitSeconds;
+
 	//public bool turnOnShaking = false;
 
 	//private Vector3 originalCameraPosition;
@@ -69,4 +80,4 @@ public class CameraEffects : Waypoint {
 	//	shakeTimer.Enabled = false;
 	//	turnOnShaking = false;
 	//}
-}
+} // end class CameraEffects
