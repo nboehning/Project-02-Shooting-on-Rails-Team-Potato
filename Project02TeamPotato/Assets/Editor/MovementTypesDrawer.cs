@@ -8,7 +8,7 @@ public class MovementTypesDrawer : PropertyDrawer
 
     private MovementTypes thisObject;
 
-    private float extraHeight = 150f;
+    private float extraHeight = 200f;
 
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -49,6 +49,9 @@ public class MovementTypesDrawer : PropertyDrawer
                 Rect waypointDurationRect = new Rect(position.x, position.y + 20, position.width, 15f);
                 offsetX += position.width / 3;
                 EditorGUI.PropertyField(waypointDurationRect, duration);
+				
+				if(duration.floatValue < 0f)
+					duration.floatValue = 0f;
 
                 Rect startingPointLabelRect = new Rect(position.x, position.y + 37, position.width, 17f);
                 EditorGUI.LabelField(startingPointLabelRect, "Starting Point");
@@ -89,6 +92,9 @@ public class MovementTypesDrawer : PropertyDrawer
 					EditorGUI.indentLevel++;
 					Rect effectDurationRect = new Rect(position.x, position.y + 122, position.width, 17f);
 					EditorGUI.PropertyField(effectDurationRect, effectDuration);
+					
+					if(effectDuration.floatValue < 0f)
+						effectDuration.floatValue = 0f;
 
                     if ((CameraEffectTypes) effectType.enumValueIndex == CameraEffectTypes.SHAKE)
                     {
@@ -98,8 +104,19 @@ public class MovementTypesDrawer : PropertyDrawer
                     }
                     else if ((CameraEffectTypes) effectType.enumValueIndex == CameraEffectTypes.SPLATTER)
                     {
-                        
-                    }
+						Rect fadeSplatterRect = new Rect(position.x, position.y + 139, position.width, 17f);
+						EditorGUI.PropertyField(fadeSplatterRect, splatterFade);
+
+						if(splatterFade.boolValue)
+						{
+							EditorGUI.indentLevel++;
+							Rect fadeSplatterDurationRect = new Rect(position.x, position.y + 157, position.width, 17f);
+							EditorGUI.PropertyField(fadeSplatterDurationRect, splatterFadeSpeed);
+							if(splatterFadeSpeed.floatValue < 0f)
+								splatterFadeSpeed.floatValue = 0f;
+							EditorGUI.indentLevel--;
+                    	}
+					}
                     else if ((CameraEffectTypes) effectType.enumValueIndex == CameraEffectTypes.FADE)
                     {
                         
