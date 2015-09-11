@@ -33,6 +33,7 @@ public class MovementTypesDrawer : PropertyDrawer
         SerializedProperty lookPoint = property.FindPropertyRelative("lookPoint");
 
         SerializedProperty effectType = property.FindPropertyRelative("effectType");
+		SerializedProperty effectDuration = property.FindPropertyRelative ("effectDuration");
         SerializedProperty shakeIntensity = property.FindPropertyRelative("shakeIntensity");
         SerializedProperty splatterFade = property.FindPropertyRelative("splatterFade");
         SerializedProperty splatterFadeSpeed = property.FindPropertyRelative("splatterFadeSpeed");
@@ -45,12 +46,11 @@ public class MovementTypesDrawer : PropertyDrawer
                 EditorGUI.indentLevel++;
                 float offsetX = position.x;
 
-                Rect waypointDurationRect = new Rect(offsetX, position.y + 20, position.width/2, 15f);
-                offsetX += 35;
+                Rect waypointDurationRect = new Rect(position.x, position.y + 20, position.width, 15f);
+                offsetX += position.width / 3;
                 EditorGUI.PropertyField(waypointDurationRect, duration);
 
                 Rect startingPointLabelRect = new Rect(position.x, position.y + 37, position.width, 17f);
-                offsetX += 77;
                 EditorGUI.LabelField(startingPointLabelRect, "Starting Point");
 
                 Rect startingPointRect = new Rect(offsetX, position.y + 37, position.width / 2, 15f);
@@ -85,11 +85,14 @@ public class MovementTypesDrawer : PropertyDrawer
 
                     Rect effectTypeRect = new Rect(offsetX, position.y + 105, position.width / 2, 17f);
                     EditorGUI.PropertyField(effectTypeRect, effectType, GUIContent.none);
+					
+					EditorGUI.indentLevel++;
+					Rect effectDurationRect = new Rect(position.x, position.y + 122, position.width, 17f);
+					EditorGUI.PropertyField(effectDurationRect, effectDuration);
 
                     if ((CameraEffectTypes) effectType.enumValueIndex == CameraEffectTypes.SHAKE)
                     {
-                        EditorGUI.indentLevel++;
-                        Rect shakeIntensitySliderRect = new Rect(position.x, position.y + 122, position.width, 17f);
+                        Rect shakeIntensitySliderRect = new Rect(position.x, position.y + 139, position.width, 17f);
                         EditorGUI.Slider(shakeIntensitySliderRect, shakeIntensity, 0f, 100f);
                         EditorGUI.indentLevel--;
                     }
