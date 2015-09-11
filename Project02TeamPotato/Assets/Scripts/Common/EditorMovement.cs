@@ -4,7 +4,7 @@ using UnityEditor;
 
 public class EditorMovement : EditorWindow 
 {
-
+	/*
     //Bezier Curve Variables
     static bool bezierCurve = false;
     static Vector3 curveStart = Vector3.zero, curveEnd = Vector3.zero;
@@ -66,4 +66,5 @@ public class EditorMovement : EditorWindow
             }
         }
     }
+    */
 }
