@@ -7,11 +7,11 @@ public class EditorMovement : EditorWindow
 
     //Bezier Curve Variables
     static bool bezierCurve = false;
-    static Vector3 curveStart, curveEnd;
-    static Vector3 tanStart, tanEnd;
-    static Color drawColor;
-    static Texture2D drawTexture;
-    static float width;
+    static Vector3 curveStart = Vector3.zero, curveEnd = Vector3.zero;
+    static Vector3 tanStart = Vector3.zero, tanEnd = Vector3.zero;
+    static Color drawColor = Color.white;
+    static Texture2D drawTexture = Texture2D.whiteTexture;
+    static float width = 0;
 
     //Straight Line Variables
 
