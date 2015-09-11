@@ -33,10 +33,15 @@ public class WaypointControllerEditor : Editor
                 GUI.color = Color.red;
                 if (GUILayout.Button("X", GUILayout.Width(25f)))
                 {
-                    
-                    if(controller.GetArrayElementAtIndex(i).objectReferenceValue != null)
+					int oldSize = controller.arraySize;
+					controller.DeleteArrayElementAtIndex(i);
+					if(controller.arraySize == oldSize)
+					{
+						controller.DeleteArrayElementAtIndex(i);
+					}
+                    /*if(controller.GetArrayElementAtIndex(i).objectReferenceValue != null)
                         controller.DeleteArrayElementAtIndex(i);
-                    controller.DeleteArrayElementAtIndex(i);
+                    controller.DeleteArrayElementAtIndex(i);*/
                 }
                 GUI.color = Color.white;
 
