@@ -2,11 +2,21 @@
 using System.Collections;
 using UnityEditor;
 
+public enum MovementTypes
+{
+    BEZIERCURVE,
+    STRAIGHTLINE,
+    LOOKCHAIN,
+    WAIT
+}
+
 [CustomPropertyDrawer(typeof(MovementTypes))]
 public class MovementTypesDrawer : PropertyDrawer
 {
 
     private MovementTypes thisObject;
+
+    public GameObject[] waypoints;
 
     private float extraHeight = 200f;
 
@@ -44,9 +54,9 @@ public class MovementTypesDrawer : PropertyDrawer
 
         EditorGUI.PropertyField(movementTypeDisplay, movementType, GUIContent.none);
 
-        switch ((MovementType) movementType.enumValueIndex)
+        switch ((MovementTypes) movementType.enumValueIndex)
         {
-            case MovementType.STRAIGHTLINE:
+            case MovementTypes.STRAIGHTLINE:
 			#region StraightLine
                 EditorGUI.indentLevel++;
                 float offsetX = position.x;
@@ -216,7 +226,7 @@ public class MovementTypesDrawer : PropertyDrawer
                 EditorGUI.indentLevel--;
 #endregion
                 break;
-            case MovementType.BEZIERCURVE:
+            case MovementTypes.BEZIERCURVE:
 			#region BezierCurve
 			EditorGUI.indentLevel++;
 			offsetX = position.x;
@@ -392,9 +402,9 @@ public class MovementTypesDrawer : PropertyDrawer
 			EditorGUI.indentLevel--;
 #endregion
                 break;
-            case MovementType.LOOKANDRETURN:
+            case MovementTypes.LOOKCHAIN:
                 break;
-            case MovementType.WAIT:
+            case MovementTypes.WAIT:
                 break;
         }
 
@@ -404,5 +414,53 @@ public class MovementTypesDrawer : PropertyDrawer
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
         return base.GetPropertyHeight(property, label) + extraHeight;
+    }
+
+    /// <summary>
+    /// @author Jake Skov
+    /// </summary>
+    public void OnDrawGizmos()
+    {
+        foreach (GameObject wp in waypoints)
+        {
+            switch (wp.type)
+            {
+                case MovementTypes.STRAIGHTLINE:
+                    Gizmos.DrawLine(startPos, endPos);
+                    break;
+
+                case MovementTypes.BEZIERCURVE:
+                    Gizmos.color = Color.green;
+                    Vector3 lineStarting = GetPoint();
+                    for (int i = 1; i <= 1; i++)
+                    {
+                        Vector3 lineEnd = GetPoint(startPos, endPos, wp.bezierCurve.position, i / 10f);
+                        Gizmos.DrawLine(lineStarting, lineEnd);
+                        lineStarting = lineEnd;
+                    }
+                    break;
+
+                case MovementTypes.LOOKRETURN:
+                    break;
+
+                case MovementTypes.LOOKCHAIN:
+                    break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// @Author Jake Skov
+    /// </summary>
+    /// <param name="start">Start Point</param>
+    /// <param name="end">End Point</param>
+    /// <param name="curve">Sets angle</param>
+    /// <param name="t">sets up bezier</param>
+    /// <returns>Curve</returns>
+    public Vector3 GetPoint(Vector3 start, Vector3 end, Vector3 curve, float t)
+    {
+        t = Mathf.Clamp01(t);
+        float oneMinusT = 1f - t;
+        return oneMinusT * oneMinusT * start + 2f * oneMinusT * t * curve + t * t * end;
     }
 }
