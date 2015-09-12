@@ -40,8 +40,11 @@ public class MovementTypes
 
     public FacingTypes facingType;
     public CameraEffectTypes effectType;
+	public float effectDuration;
 
-    public float splatterFadeSpeed;
+    public float fadeTime;
     public bool splatterFade;
     public float shakeIntensity;
+	public bool isFadedOut = false;	// If true, screen will be black, if false, screen will be visible
 }
+
