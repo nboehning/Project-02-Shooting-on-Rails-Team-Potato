@@ -416,7 +416,7 @@ public class MovementTypesDrawer : PropertyDrawer
                     break;
             case MovementTypes.WAIT:
                 #region Wait
-                //input for 
+                //input for waitTime
                 #endregion
                 break;
         }
