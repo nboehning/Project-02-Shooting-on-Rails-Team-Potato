@@ -4,32 +4,9 @@ using System.Text;
 
 public class WaypointController : MonoBehaviour
 {
-
     public MovementTypes[] waypointObjects;
-//	public MovementTypes[] cameraWaypoints;
-	
-	private GameObject mainCamera;
 
-//	public MovementType moveType;
-//	public float waypointDuration;
-//	
-//	public Transform point1;
-//	public Transform point2;
-//	public Transform point3;
-//	public Transform lookPoint;
-//	
-//	public float lookTime1;
-//	public float lookTime2;
-//	public float lookTime3;
-//	
-//	public FacingTypes facingType;
-//	public CameraEffectTypes effectType;
-//	public float effectDuration;
-//	
-//	public float fadeTime;
-//	public bool splatterFade;
-//	public float shakeIntensity;
-//	public bool isFadedOut = false;	// If true, screen will be black, if false, screen will be visible
+	private GameObject mainCamera;
 
 	void Start ()
 	{
@@ -53,7 +30,6 @@ public class WaypointController : MonoBehaviour
 	IEnumerator WaypointEngine()
 	{
 		MovementTypes wp; // create a waypoint object pointer to use in the for loop
-//		foreach(MovementTypes wp in waypointObjects)
 		// iterate through all the waypoints in the waypoints array
 		for (int i = 0; i < waypointObjects.Length; i++)
 		{
@@ -69,7 +45,6 @@ public class WaypointController : MonoBehaviour
 			case CameraEffectTypes.SPLATTER:
 				break;
 			case CameraEffectTypes.NONE:
-//				StartCoroutine(WaitCamera(wp.effectDuration));
 				yield return new WaitForSeconds(wp.effectDuration);
 				break;
 			default:
