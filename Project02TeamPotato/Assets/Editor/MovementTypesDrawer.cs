@@ -395,7 +395,7 @@ public class MovementTypesDrawer : PropertyDrawer
                 #endregion
                 break;
             case MovementType.LOOKCHAIN:
-                #region LookCkain
+                #region LookChain
                 int numFacings;
                 //input for num facings
                // for (int i = 0; i <= facings.GetLength(0); i++)
