@@ -52,10 +52,12 @@ public class WaypointControllerEditor : Editor
         EditorGUILayout.PropertyField(controller);
         if (controller.isExpanded)
         {
-            EditorGUILayout.LabelField("Size of array: " + controller.arraySize);
+            EditorGUILayout.LabelField("Number of Waypoints: " + controller.arraySize);
             EditorGUI.indentLevel++;
             for (int i = 0; i < controller.arraySize; i++)
             {
+                EditorGUI.indentLevel = 1;
+                EditorGUILayout.LabelField("Waypoint " + (i + 1), EditorStyles.boldLabel);
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.PropertyField(controller.GetArrayElementAtIndex(i));
 
@@ -74,6 +76,7 @@ public class WaypointControllerEditor : Editor
                     }
                 }
 
+                Color oldColor = GUI.color;
                 GUI.color = Color.red;
                 if (GUILayout.Button("X", GUILayout.Width(25f)))
                 {
@@ -87,7 +90,7 @@ public class WaypointControllerEditor : Editor
                         controller.DeleteArrayElementAtIndex(i);
                     controller.DeleteArrayElementAtIndex(i);*/
                 }
-                GUI.color = Color.white;
+                GUI.color = oldColor;
 
                 EditorGUILayout.EndHorizontal();
             }

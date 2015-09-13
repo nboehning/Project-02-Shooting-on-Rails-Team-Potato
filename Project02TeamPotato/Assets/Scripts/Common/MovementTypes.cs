@@ -41,6 +41,7 @@ public class MovementTypes
     public FacingTypes facingType;
     public CameraEffectTypes effectType;
 	public float effectDuration;
+    public float effectDelay;
 
     public float fadeTime;
     public bool splatterFade;
