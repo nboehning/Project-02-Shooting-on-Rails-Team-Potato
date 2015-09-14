@@ -65,55 +65,22 @@ public class WaypointController : MonoBehaviour
     }
     */
 
+    // @author: Craig Broskow
 	private GameObject mainCamera;
 	private GameObject canvasObject;
 	private GameObject canvasBackground;
 	private GameObject splatterForeground;
 
+    // @author: Craig Broskow
 	void Start ()
 	{
 		InitCameraEffects(); // initialize the camera effects objects
 
-		waypointObjects = new MovementTypes[10]; // start off with 10 waypoints for testing
-		for (int i = 0; i < 10; i++) // init all 10 testing waypoints as camera effects
-		{
-			waypointObjects[i] = new MovementTypes();
-			// alternate between a Shake camera effect and None
-			waypointObjects[i].effectType = i % 2 == 1 ? CameraEffectTypes.SHAKE : CameraEffectTypes.NONE;
-			// alternate effect durations between 2 seconds and 4 seconds
-			waypointObjects[i].effectDuration = i % 4 > 1 ? 2.0f : 4.0f;
-			// alternate shake intensity between 2 and 4 (relative magnitude)
-			waypointObjects[i].shakeIntensity = i % 4 > 1 ? 2.0f : 4.0f;
-			// alternate fade effect between fading-in and fading-out
-			waypointObjects[i].isFadedOut = i % 4 > 1 ? true : false;
-			waypointObjects[i].waypointDuration = waypointObjects[i].effectDuration;
-			waypointObjects[i].moveType = MovementType.STRAIGHTLINE;
-			waypointObjects[i].facingType = FacingTypes.FREELOOK;
-		}
-
-		// setup special waypoints for testing fading and splatter camera effects
-		waypointObjects[0].effectType = CameraEffectTypes.FADE;
-		waypointObjects[0].isFadedOut = false;
-		waypointObjects[1].effectType = CameraEffectTypes.FADE;
-		waypointObjects[1].isFadedOut = true;
-		waypointObjects[2].effectType = CameraEffectTypes.SPLATTER;
-		waypointObjects[2].effectDuration = 10.0f;
-		waypointObjects[2].fadeTime = 2.0f;
-		waypointObjects[2].splatterFade = true;
-		waypointObjects[2].waypointDuration = 10.0f;
-		waypointObjects[5].effectType = CameraEffectTypes.SPLATTER;
-		waypointObjects[5].effectDuration = 4.0f;
-		waypointObjects[5].fadeTime = 2.0f;
-		waypointObjects[5].splatterFade = false;
-		waypointObjects[5].waypointDuration = 4.0f;
-		waypointObjects[8].effectType = CameraEffectTypes.FADE;
-		waypointObjects[8].isFadedOut = false;
-		waypointObjects[9].effectType = CameraEffectTypes.FADE;
-		waypointObjects[9].isFadedOut = true;
-
 		StartCoroutine(WaypointEngine()); // process the array of waypoints
 	} // end method Start
 
+
+    // @author: Craig Broskow
 	private void InitCameraEffects()
 	{
 		mainCamera = GameObject.FindWithTag("MainCamera"); // find the main camera by its tag
@@ -125,9 +92,12 @@ public class WaypointController : MonoBehaviour
 		splatterForeground.GetComponent<Image>().enabled = true;
 	} // end method InitCameraEffects
 
+    // @author: Craig Broskow
+    // Modified from testing to designer input by: Nathan Boehning
 	IEnumerator WaypointEngine()
 	{
 		MovementTypes wp; // create a waypoint object pointer to use in the for loop
+
 		// iterate through all the waypoints in the waypoints array
 		for (int i = 0; i < waypointObjects.Length; i++)
 		{
@@ -137,9 +107,12 @@ public class WaypointController : MonoBehaviour
 			StartCoroutine(RunCameraEffect(wp));
 			yield return new WaitForSeconds(wp.waypointDuration);
 		} // end for
+
 		yield return null;
 	} // end method WaypointEngine
 	
+    // @author: Craig Broskow, created skeleton
+
 	IEnumerator RunMovement(MovementTypes wp)
 	{
 		switch(wp.moveType)
@@ -162,57 +135,117 @@ public class WaypointController : MonoBehaviour
 		yield return null;
 	} // end method RunMovement
 	
+    // Author: Craig Broskow, created skeleton to test concurrent running
 	IEnumerator MoveStraightLine(float moveSeconds)
 	{
 		float elapsedTime = 0f; // keeps track of elapsed time to continue movement
-		int i = 0; // counter for displaying loop count
 		string outputString;
 
 		while (elapsedTime < moveSeconds) // iterate through the loop for moveSeconds seconds
 		{
-			i++;
-			outputString = "Straight line movement #" + i.ToString();
-			Debug.Log (outputString);
+
+
 			elapsedTime += Time.deltaTime;
 			yield return null;
 		}
 		yield return null;
 	} // end method MoveStraightLine
 	
+    // @author: Craig Broskow, created skeleton to test concurrent running
+    // Modified for actual facing code by: Nathan Boehning
 	IEnumerator RunFacing(MovementTypes wp)
 	{
-		switch(wp.facingType)
-		{
-			case FacingTypes.FIXEDPOINT:
-				break;
-			case FacingTypes.FREELOOK:
-				StartCoroutine(FaceFreeLook(wp.waypointDuration));
-				yield return new WaitForSeconds(wp.waypointDuration);
-				break;
-			default:
-				Debug.Log ("Invalid facing type!");
-				break;
-		} // end switch
-		yield return null;
+        // If the movement type is look and return, no facing type will occur
+	    if (wp.moveType == MovementType.LOOKANDRETURN)
+	    {
+	        yield return new WaitForSeconds(wp.waypointDuration);
+	    }
+	    else
+	    {
+	        switch (wp.facingType)
+	        {
+	            case FacingTypes.FIXEDPOINT:
+	                StartCoroutine(FacingFixedPoint(wp.waypointDuration, wp.lookPoint));
+	                yield return new WaitForSeconds(wp.waypointDuration);
+	                break;
+	            case FacingTypes.FREELOOK:
+	                StartCoroutine(FacingFreeLook(wp.waypointDuration));
+	                yield return new WaitForSeconds(wp.waypointDuration);
+
+                    // Make cursor visible and able to move again
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
+                    break;
+	            default:
+	                Debug.Log("Invalid facing type!");
+	                break;
+	        } // end switch
+	        yield return null;
+	    }
 	} // end method RunFacing
-	
-	IEnumerator FaceFreeLook(float faceSeconds)
+
+    // @author: Nathan Boehning
+
+    IEnumerator FacingFixedPoint(float faceSeconds, Transform lookPoint)
+    {
+        float elapsedTime = 0f;     // variable to hold elapsed time
+
+        while (elapsedTime < faceSeconds)
+        {
+            // Set the rotation of the mainCamera to look at the position
+            mainCamera.transform.LookAt(lookPoint.position);
+
+            // Increment the elapsed time by the change in time
+            elapsedTime += Time.deltaTime;
+        }
+
+        yield return null;
+    }
+    // @author: Craig Broskow, testing for concurrent running
+    // Modified for actual facing code by: Nathan Boehning
+	IEnumerator FacingFreeLook(float faceSeconds)
 	{
 		float elapsedTime = 0f; // keeps track of elapsed time to continue facing
-		int i = 0; // counter for displaying loop count
-		string outputString;
-		
-		while (elapsedTime < faceSeconds) // iterate through the loop for faceSeconds seconds
-		{
-			i++;
-			outputString = "Facing free look #" + i.ToString();
-			Debug.Log (outputString);
-			elapsedTime += Time.deltaTime;
-			yield return null;
-		}
-		yield return null;
-	} // end method FaceFreeLook
+        float xRotation = 0f;
+        float yRotation = 0f;
+        float lookSensitivity = 0.5f;
+        float curXRotation = mainCamera.transform.rotation.x;
+        float curYRotation = mainCamera.transform.rotation.y;
+        float lookSmoothDamp = 0.1f;
+        float xRotationV = 0;
+        float yRotationV = 0;
 
+        // Make cursor invisible and locked in the middle of the screen
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        while (elapsedTime < faceSeconds) // iterate through the loop for faceSeconds seconds
+	    {
+
+            // Increment the yRotation using mouse input mulitplied by the mouse sensitivity
+	        yRotation += Input.GetAxis("Mouse X")*lookSensitivity;
+
+            // Decrement the xRotation using mouse input. (incrementing creates an inverted effect)
+	        xRotation -= Input.GetAxis("Mouse Y")*lookSensitivity;
+
+            // Lock the rotation so camera can only look straight up or straight down without going circular
+	        xRotation = Mathf.Clamp(xRotation, -90, 90);
+
+            // Smooth the rotation to prevent screen tearing
+	        curXRotation = Mathf.SmoothDamp(curXRotation, xRotation, ref xRotationV, lookSmoothDamp);
+	        curYRotation = Mathf.SmoothDamp(curYRotation, yRotation, ref yRotationV, lookSmoothDamp);
+
+            // Set the rotation of the camera to new rotation
+	        mainCamera.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+
+            // Increment the elapsed time by the change in time
+	        elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        yield return null;
+    } // end method FaceFreeLook
+
+    // @author: Craig Broskow
 	IEnumerator RunCameraEffect(MovementTypes wp)
 	{
 		switch(wp.effectType) // check for camera effects
@@ -239,13 +272,14 @@ public class WaypointController : MonoBehaviour
 		yield return null;
 	} // end method RunCameraEffect
 
+    // @author: Craig Broskow
 	IEnumerator ShakeCamera(float shakeSeconds, float shakeIntensity)
 	{
 		float shakeMultiplier = 0.3f; // arbitrary number to adjust shaking intensity
 		float elapsedTime = 0f; // keeps track of elapsed time to continue camera shaking
 		float randomValueX; // x-axis random additive value
 		float randomValueY; // y-axis random additive value
-		Vector3 originalCameraPosition = mainCamera.transform.position;
+		Vector3 originalCameraPosition = mainCamera.transform.localPosition;
 		
 		shakeIntensity = shakeMultiplier * shakeIntensity; // fine-tune the shaking intensity
 		while (elapsedTime < shakeSeconds) // iterate through the loop for shakeSeconds seconds
@@ -253,17 +287,18 @@ public class WaypointController : MonoBehaviour
 			randomValueX = shakeIntensity * (Random.value - 0.5f);
 			randomValueY = shakeIntensity * (Random.value - 0.5f);
 			// move the main camera to a slightly different position based on randomValueX and randomValueY
-			mainCamera.transform.position = new Vector3(originalCameraPosition.x + randomValueX,
+			mainCamera.transform.localPosition = new Vector3(originalCameraPosition.x + randomValueX,
 			                                            originalCameraPosition.y + randomValueY,
 			                                            originalCameraPosition.z);
 			elapsedTime += Time.deltaTime;
 			yield return null;
 		}
 		// return the main camera to its original position
-		mainCamera.transform.position = originalCameraPosition;
+		mainCamera.transform.localPosition = originalCameraPosition;
 		yield return null;
 	} // end method ShakeCamera
 	
+    // @author: Craig Broskow
 	IEnumerator FadeCamera(float fadeSeconds, bool fadeIn)
 	{
 		float elapsedTime = 0f; // keeps track of elapsed time to fade the camera
@@ -297,6 +332,7 @@ public class WaypointController : MonoBehaviour
 		yield return null;
 	} // end method FadeCamera
 
+    // @author: Craig Broskow
 	IEnumerator SplatterCamera(float splatterSeconds, bool fadeIn, float fadeSeconds)
 	{
 		float elapsedTime = 0f; // keeps track of elapsed time for the splatter effect

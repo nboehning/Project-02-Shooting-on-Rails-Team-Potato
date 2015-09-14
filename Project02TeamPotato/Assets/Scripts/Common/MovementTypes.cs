@@ -5,7 +5,7 @@ public enum MovementType
 {
     STRAIGHTLINE,
     BEZIERCURVE,
-    LOOKCHAIN,
+    LOOKANDRETURN,
     WAIT
 }
 
