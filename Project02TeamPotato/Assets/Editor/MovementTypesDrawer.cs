@@ -14,7 +14,7 @@ public class MovementTypesDrawer : PropertyDrawer
     private MovementTypes thisObject;
 
     // Variable to create more room between the different elemenets in the waypoint array
-    private float extraHeight = 200f;
+    private float extraHeight = 205f;
 
     // bool to flipflop whether or not the camera is fadedin/out
     private bool isFadedOut = false;
@@ -348,42 +348,52 @@ public class MovementTypesDrawer : PropertyDrawer
             // Bezier curve movement type
             case MovementType.BEZIERCURVE:
                 #region BezierCurve
-
+                // Set indent level
                 EditorGUI.indentLevel = 2;
+
+                // Set the offset
                 offsetX = position.x + (position.width / 3);
 
+                // Waypoint stuff
                 waypointDurationLabelRect = new Rect(position.x, position.y + 20, position.width, 17f);
                 EditorGUI.LabelField(waypointDurationLabelRect, "Waypoint Duration");
 
                 waypointDurationRect = new Rect(offsetX, position.y + 20, position.width / 2, 15f);
                 duration.floatValue = EditorGUI.FloatField(waypointDurationRect, duration.floatValue);
 
+                // waypoint duration check for negative
                 if (duration.floatValue < 0f)
                     duration.floatValue = 0f;
 
+                // Starting point rectangles
                 startingPointLabelRect = new Rect(position.x, position.y + 37, position.width, 17f);
                 EditorGUI.LabelField(startingPointLabelRect, "Starting Point");
 
                 startingPointRect = new Rect(offsetX, position.y + 37, position.width / 2, 15f);
                 EditorGUI.PropertyField(startingPointRect, point1, GUIContent.none);
 
+                // Ending point labels
                 endingPointLabelRect = new Rect(position.x, position.y + 54, position.width, 17f);
                 EditorGUI.LabelField(endingPointLabelRect, "Ending Point");
 
                 endingPointRect = new Rect(offsetX, position.y + 54, position.width / 2, 15f);
                 EditorGUI.PropertyField(endingPointRect, point2, GUIContent.none);
 
+                // Control points label
                 Rect controlPointLabelRect = new Rect(position.x, position.y + 71, position.width, 17f);
                 EditorGUI.LabelField(controlPointLabelRect, "Control Point");
 
                 Rect controlPointRect = new Rect(offsetX, position.y + 71, position.width / 2, 15f);
                 EditorGUI.PropertyField(controlPointRect, point3, GUIContent.none);
 
+                // Facing type info
                 facingTypeLabelRect = new Rect(position.x, position.y + 71 + 17, position.width, 17f);
                 EditorGUI.LabelField(facingTypeLabelRect, "Facing Type");
 
                 facingTypeRect = new Rect(offsetX, position.y + 71 + 17, position.width / 2, 15f);
                 EditorGUI.PropertyField(facingTypeRect, facingType, GUIContent.none);
+
+                // Code done the exact same way as the straight line from here on, only difference is the y position
                 if ((FacingTypes)facingType.enumValueIndex == FacingTypes.FIXEDPOINT)
                 {
                     #region BezierCurve > FixedPoint
@@ -579,77 +589,92 @@ public class MovementTypesDrawer : PropertyDrawer
             // Look and return movement type
             case MovementType.LOOKANDRETURN:
                 #region LookAndReturn
+                // Set indent level
                 EditorGUI.indentLevel = 2;
+
+                // Set offset
                 offsetX = position.x + (position.width / 3);
 
-                waypointDurationLabelRect = new Rect(position.x, position.y + 20, position.width, 17f);
-                EditorGUI.LabelField(waypointDurationLabelRect, "Waypoint Duration");
+                    // Set the waypoint duration rectangles
+                    waypointDurationLabelRect = new Rect(position.x, position.y + 20, position.width, 17f);
+                    EditorGUI.LabelField(waypointDurationLabelRect, "Waypoint Duration");
 
-                waypointDurationRect = new Rect(offsetX, position.y + 20, position.width / 2, 15f);
-                duration.floatValue = EditorGUI.FloatField(waypointDurationRect, duration.floatValue);
+                    waypointDurationRect = new Rect(offsetX, position.y + 20, position.width/2, 15f);
+                    duration.floatValue = EditorGUI.FloatField(waypointDurationRect, duration.floatValue);
 
-                if (duration.floatValue < 0f)
-                    duration.floatValue = 0f;
+                    // Make sure it can't go below zero
+                    if (duration.floatValue < 0f)
+                        duration.floatValue = 0f;
 
-                startingPointLabelRect = new Rect(position.x, position.y + 37, position.width, 17f);
-                EditorGUI.LabelField(startingPointLabelRect, "Starting Focus Point");
+                    // Starting point rectangles
+                    startingPointLabelRect = new Rect(position.x, position.y + 37, position.width, 17f);
+                    EditorGUI.LabelField(startingPointLabelRect, "Starting Focus Point");
 
-                startingPointRect = new Rect(offsetX, position.y + 37, position.width / 2, 15f);
-                EditorGUI.PropertyField(startingPointRect, point1, GUIContent.none);
+                    startingPointRect = new Rect(offsetX, position.y + 37, position.width/2, 15f);
+                    EditorGUI.PropertyField(startingPointRect, point1, GUIContent.none);
 
-                endingPointLabelRect = new Rect(position.x, position.y + 54, position.width, 17f);
-                EditorGUI.LabelField(endingPointLabelRect, "Target Focus Point");
+                    // Time to reach target point rectangles
+                    Rect timeToReachTargetLabelRect = new Rect(position.x, position.y + 54, position.width, 17f);
+                    EditorGUI.LabelField(timeToReachTargetLabelRect, "Time To Look At Target Point");
 
-                endingPointRect = new Rect(offsetX, position.y + 54, position.width / 2, 15f);
-                EditorGUI.PropertyField(endingPointRect, point2, GUIContent.none);
+                    Rect timeToTargetPointReachRect = new Rect(offsetX + 30, position.y + 54, (position.width / 2) - 30, 15f);
+                    lookTime1.floatValue = EditorGUI.FloatField(timeToTargetPointReachRect, lookTime1.floatValue);
 
-                controlPointLabelRect = new Rect(position.x, position.y + 71, position.width, 17f);
-                EditorGUI.LabelField(controlPointLabelRect, "Ending Focus Point");
+                    // Target point rectangles
+                    Rect targetPointLabelRect = new Rect(position.x, position.y + 54 + 17, position.width, 17f);
+                    EditorGUI.LabelField(targetPointLabelRect, "Target Focus Point");
 
-                controlPointRect = new Rect(offsetX, position.y + 71, position.width / 2, 15f);
-                EditorGUI.PropertyField(controlPointRect, point3, GUIContent.none);
+                    Rect targetPointRect = new Rect(offsetX, position.y + 54 + 17, position.width/2, 15f);
+                    EditorGUI.PropertyField(targetPointRect, point2, GUIContent.none);
 
-                facingTypeLabelRect = new Rect(position.x, position.y + 71 + 17, position.width, 17f);
-                EditorGUI.LabelField(facingTypeLabelRect, "Facing Type");
+                    // Time to stay at target point rectangles
+                    Rect timeToStayTargetPointLabelRect = new Rect(position.x, position.y + 88, position.width/2, 17f);
+                    EditorGUI.LabelField(timeToStayTargetPointLabelRect, "Time Looking At Target Point");
 
-                facingTypeRect = new Rect(offsetX, position.y + 71 + 17, position.width / 2, 15f);
-                EditorGUI.PropertyField(facingTypeRect, facingType, GUIContent.none);
-                if ((FacingTypes)facingType.enumValueIndex == FacingTypes.FIXEDPOINT)
-                {
-                    #region BezierCurve > FixedPoint
-                    EditorGUI.indentLevel++;
+                    Rect targetPointTimeRect = new Rect(offsetX + 30, position.y + 88, (position.width / 2) - 30, 15f);
+                    lookTime2.floatValue = EditorGUI.FloatField(targetPointTimeRect, lookTime2.floatValue);
 
-                    Rect lookPointLabelRect = new Rect(position.x, position.y + 88 + 17, position.width, 17f);
-                    EditorGUI.LabelField(lookPointLabelRect, "Look At Point");
+                    // Time to look at final point rectangles
+                    Rect timeToLookFinalPointLabelRect = new Rect(position.x, position.y + 105, position.width/2, 17f);
+                    EditorGUI.LabelField(timeToLookFinalPointLabelRect, "Time To Look At Final Point");
 
-                    Rect lookPointRect = new Rect(offsetX, position.y + 88 + 17, position.width / 2, 15f);
-                    EditorGUI.PropertyField(lookPointRect, lookPoint, GUIContent.none);
+                    Rect targetPointFinalTimeRect = new Rect(offsetX + 30, position.y + 105, (position.width/2) - 30, 15f);
+                    lookTime3.floatValue = EditorGUI.FloatField(targetPointFinalTimeRect, lookTime3.floatValue);
 
-                    EditorGUI.indentLevel--;
+                    // Ending point rectangles
+                    endingPointLabelRect = new Rect(position.x, position.y + 71 + 51, position.width, 17f);
+                    EditorGUI.LabelField(endingPointLabelRect, "Ending Focus Point");
 
-                    Rect effectTypeLabelRect = new Rect(position.x, position.y + 105 + 17, position.width, 17f);
-                    EditorGUI.LabelField(effectTypeLabelRect, "Camera Effect");
+                    endingPointRect = new Rect(offsetX, position.y + 71 + 51, position.width/2, 15f);
+                    EditorGUI.PropertyField(endingPointRect, point3, GUIContent.none);
 
-                    Rect effectTypeRect = new Rect(offsetX, position.y + 105 + 17, position.width / 2, 17f);
-                    EditorGUI.PropertyField(effectTypeRect, effectType, GUIContent.none);
+                    // There will be no facing type since this movement changes the rotation
+                    // Everything is same as other drawers except for y position.
 
-                    if ((CameraEffectTypes)effectType.enumValueIndex != CameraEffectTypes.NONE)
+                    Rect effectTypeLabelRect2 = new Rect(position.x, position.y + 105 + 17 + 17, position.width, 17f);
+                    EditorGUI.LabelField(effectTypeLabelRect2, "Camera Effect");
+
+                    Rect effectTypeRect2 = new Rect(offsetX, position.y + 105 + 17 + 17, position.width/2, 17f);
+                    EditorGUI.PropertyField(effectTypeRect2, effectType, GUIContent.none);
+
+                    if ((CameraEffectTypes) effectType.enumValueIndex != CameraEffectTypes.NONE)
                     {
                         EditorGUI.indentLevel++;
-                        Rect effectDelayLabelRect = new Rect(position.x, position.y + 139, position.width, 17f);
+                        Rect effectDelayLabelRect = new Rect(position.x, position.y + 139 + 17, position.width, 17f);
                         EditorGUI.LabelField(effectDelayLabelRect, "Effect Delay");
 
-                        Rect effectDelayRect = new Rect(offsetX, position.y + 139, position.width / 2, 17f);
+                        Rect effectDelayRect = new Rect(offsetX, position.y + 139 + 17, position.width/2, 17f);
                         EditorGUI.PropertyField(effectDelayRect, effectDelay, GUIContent.none);
                     }
 
-                    if ((CameraEffectTypes)effectType.enumValueIndex != CameraEffectTypes.NONE &&
-                       (CameraEffectTypes)effectType.enumValueIndex != CameraEffectTypes.FADE)
+                    if ((CameraEffectTypes) effectType.enumValueIndex != CameraEffectTypes.NONE &&
+                        (CameraEffectTypes) effectType.enumValueIndex != CameraEffectTypes.FADE)
                     {
-                        Rect effectDurationLabelRect = new Rect(position.x, position.y + 122 + 17 + 17, position.width, 17f);
+                        Rect effectDurationLabelRect = new Rect(position.x, position.y + 122 + 17 + 17 + 17, position.width,
+                            17f);
                         EditorGUI.LabelField(effectDurationLabelRect, "Effect Duration");
 
-                        Rect effectDurationRect = new Rect(offsetX, position.y + 122 + 17 + 17, position.width / 2, 17f);
+                        Rect effectDurationRect = new Rect(offsetX, position.y + 122 + 17 + 17 + 17, position.width/2, 17f);
                         EditorGUI.PropertyField(effectDurationRect, effectDuration, GUIContent.none);
 
                     }
@@ -668,34 +693,36 @@ public class MovementTypesDrawer : PropertyDrawer
                         effectDuration.floatValue = duration.floatValue - effectDelay.floatValue;
                     }
 
-                    if ((CameraEffectTypes)effectType.enumValueIndex == CameraEffectTypes.SHAKE)
+                    if ((CameraEffectTypes) effectType.enumValueIndex == CameraEffectTypes.SHAKE)
                     {
-                        Rect shakeIntensitySliderRect = new Rect(position.x, position.y + 139 + 17 + 17, position.width, 17f);
+                        Rect shakeIntensitySliderRect = new Rect(position.x, position.y + 139 + 17 + 17 + 17, position.width,
+                            17f);
                         EditorGUI.Slider(shakeIntensitySliderRect, shakeIntensity, 0f, 100f);
                         EditorGUI.indentLevel--;
                     }
-                    else if ((CameraEffectTypes)effectType.enumValueIndex == CameraEffectTypes.SPLATTER)
+                    else if ((CameraEffectTypes) effectType.enumValueIndex == CameraEffectTypes.SPLATTER)
                     {
-                        Rect fadeSplatterRect = new Rect(position.x, position.y + 139 + 17 + 17, position.width, 17f);
+                        Rect fadeSplatterRect = new Rect(position.x, position.y + 139 + 17 + 17 + 17, position.width, 17f);
                         EditorGUI.PropertyField(fadeSplatterRect, splatterFade);
 
                         if (splatterFade.boolValue)
                         {
                             EditorGUI.indentLevel++;
-                            Rect fadeSplatterDurationLabelRect = new Rect(position.x, position.y + 191, position.width, 17f);
+                            Rect fadeSplatterDurationLabelRect = new Rect(position.x, position.y + 191 + 17, position.width,
+                                17f);
                             EditorGUI.LabelField(fadeSplatterDurationLabelRect, "Splatter Fade Time");
 
-                            Rect fadeSplatterDurationRect = new Rect(offsetX, position.y + 191, position.width / 2, 17f);
+                            Rect fadeSplatterDurationRect = new Rect(offsetX, position.y + 191 + 17, position.width/2, 17f);
                             EditorGUI.FloatField(fadeSplatterDurationRect, fadeTime.floatValue);
                             if (fadeTime.floatValue < 0f)
                                 fadeTime.floatValue = 0f;
                             EditorGUI.indentLevel--;
                         }
                     }
-                    else if ((CameraEffectTypes)effectType.enumValueIndex == CameraEffectTypes.FADE)
+                    else if ((CameraEffectTypes) effectType.enumValueIndex == CameraEffectTypes.FADE)
                     {
-                        Rect fadedOutLabelRect = new Rect(position.x, position.y + 122 + 17 + 17, position.width, 17f);
-                        Rect fadeOutSpeedRect = new Rect(offsetX, position.y + 122 + 17 + 17, position.width / 2, 17f);
+                        Rect fadedOutLabelRect = new Rect(position.x, position.y + 122 + 17 + 17 + 17, position.width, 17f);
+                        Rect fadeOutSpeedRect = new Rect(offsetX, position.y + 122 + 17 + 17 + 17, position.width/2, 17f);
 
                         if (isFadedOut)
                         {
@@ -712,99 +739,8 @@ public class MovementTypesDrawer : PropertyDrawer
                         EditorGUI.FloatField(fadeOutSpeedRect, effectDuration.floatValue);
 
                     }
-                }
-                #endregion
-                else
-                {
-                    #region LookAndReturn > Freelook
-                    Rect effectTypeLabelRect = new Rect(position.x, position.y + 88 + 17, position.width, 17f);
-                    EditorGUI.LabelField(effectTypeLabelRect, "Camera Effect");
 
-                    Rect effectTypeRect = new Rect(offsetX, position.y + 88 + 17, position.width / 2, 17f);
-                    EditorGUI.PropertyField(effectTypeRect, effectType, GUIContent.none);
-
-                    if ((CameraEffectTypes)effectType.enumValueIndex != CameraEffectTypes.NONE)
-                    {
-                        EditorGUI.indentLevel++;
-                        Rect effectDelayLabelRect = new Rect(position.x, position.y + 105 + 17, position.width, 17f);
-                        EditorGUI.LabelField(effectDelayLabelRect, "Effect Delay");
-
-                        Rect effectDelayRect = new Rect(offsetX, position.y + 105 + 17, position.width / 2, 17f);
-                        EditorGUI.PropertyField(effectDelayRect, effectDelay, GUIContent.none);
-                    }
-
-                    if ((CameraEffectTypes)effectType.enumValueIndex != CameraEffectTypes.NONE &&
-                       (CameraEffectTypes)effectType.enumValueIndex != CameraEffectTypes.FADE)
-                    {
-                        Rect effectDurationLabelRect = new Rect(position.x, position.y + 122 + 17, position.width, 17f);
-                        EditorGUI.LabelField(effectDurationLabelRect, "Effect Duration");
-
-                        Rect effectDurationRect = new Rect(offsetX, position.y + 122 + 17, position.width / 2, 17f);
-                        EditorGUI.PropertyField(effectDurationRect, effectDuration, GUIContent.none);
-
-                    }
-                    if (effectDuration.floatValue < 0f)
-                        effectDuration.floatValue = 0f;
-                    if (effectDelay.floatValue < 0f)
-                        effectDelay.floatValue = 0f;
-
-                    if (effectDelay.floatValue > duration.floatValue)
-                    {
-                        effectDelay.floatValue = duration.floatValue;
-                        effectDuration.floatValue = 0f;
-                    }
-                    else if (effectDelay.floatValue + effectDuration.floatValue > duration.floatValue)
-                    {
-                        effectDuration.floatValue = duration.floatValue - effectDelay.floatValue;
-                    }
-                    if ((CameraEffectTypes)effectType.enumValueIndex == CameraEffectTypes.SHAKE)
-                    {
-                        Rect shakeIntensitySliderRect = new Rect(position.x, position.y + 122 + 17 + 17, position.width, 17f);
-                        EditorGUI.Slider(shakeIntensitySliderRect, shakeIntensity, 0f, 100f);
-                        EditorGUI.indentLevel--;
-                    }
-                    else if ((CameraEffectTypes)effectType.enumValueIndex == CameraEffectTypes.SPLATTER)
-                    {
-                        Rect fadeSplatterRect = new Rect(position.x, position.y + 122 + 17 + 17, position.width, 17f);
-                        EditorGUI.PropertyField(fadeSplatterRect, splatterFade);
-
-                        if (splatterFade.boolValue)
-                        {
-                            EditorGUI.indentLevel++;
-                            Rect fadeSplatterDurationLabelRect = new Rect(position.x, position.y + 139 + 17 + 17, position.width, 17f);
-                            EditorGUI.LabelField(fadeSplatterDurationLabelRect, "Splatter Fade Time");
-
-                            Rect fadeSplatterDurationRect = new Rect(offsetX, position.y + 139 + 17 + 17, position.width / 2, 17f);
-                            EditorGUI.FloatField(fadeSplatterDurationRect, fadeTime.floatValue);
-                            if (fadeTime.floatValue < 0f)
-                                fadeTime.floatValue = 0f;
-                            EditorGUI.indentLevel--;
-                        }
-                    }
-                    else if ((CameraEffectTypes)effectType.enumValueIndex == CameraEffectTypes.FADE)
-                    {
-                        Rect fadedOutLabelRect = new Rect(position.x, position.y + 105 + 17 + 17, position.width, 17f);
-                        Rect fadeOutSpeedRect = new Rect(offsetX, position.y + 105 + 17 + 17, position.width / 2, 17f);
-
-                        if (isFadedOut)
-                        {
-                            isFadedOut = false;
-                            sIsFadedOut.boolValue = isFadedOut;
-                            EditorGUI.LabelField(fadedOutLabelRect, "Fade In Time");
-                        }
-                        else
-                        {
-                            isFadedOut = true;
-                            sIsFadedOut.boolValue = isFadedOut;
-                            EditorGUI.LabelField(fadedOutLabelRect, "Fade Out Time");
-                        }
-                        EditorGUI.FloatField(fadeOutSpeedRect, effectDuration.floatValue);
-
-                    }
-                }
-                #endregion
-                EditorGUI.indentLevel--;
-                #endregion
+                    #endregion
                 break;
             // Wait movement type
             case MovementType.WAIT:
@@ -812,14 +748,19 @@ public class MovementTypesDrawer : PropertyDrawer
                 EditorGUI.indentLevel = 2;
                 offsetX = position.x + (position.width / 3);
 
+                // Waypoint duration time rectangles
                 waypointDurationLabelRect = new Rect(position.x, position.y + 20, position.width, 17f);
                 EditorGUI.LabelField(waypointDurationLabelRect, "Waypoint Duration");
 
                 waypointDurationRect = new Rect(offsetX, position.y + 20, position.width / 2, 15f);
                 duration.floatValue = EditorGUI.FloatField(waypointDurationRect, duration.floatValue);
 
+                // Make sure designer can't go negative
                 if (duration.floatValue < 0f)
                     duration.floatValue = 0f;
+
+                // Facing type and camera effect type is all same as other drawers
+                // Only the y position is different
 
                 facingTypeLabelRect = new Rect(position.x, position.y + 71 - 34, position.width, 17f);
                 EditorGUI.LabelField(facingTypeLabelRect, "Facing Type");
