@@ -3,16 +3,16 @@ using System.Collections;
 
 public class Facings
 {
-    //float xRotation;
-    //float yRotation;
-    //float lookSensitivity = 5f;
-    //float curXRotation;
-    //float curYRotation;
-    //float lookSmoothDamp = 0.1f;
-    //float xRotationV = 0;
-    //float yRotationV = 0;
-    //private float duration;
-    //GameObject mainCamera = GameObject.Find("Main Camera");
+    float xRotation;
+    float yRotation;
+    float lookSensitivity = 5f;
+    float curXRotation;
+    float curYRotation;
+    float lookSmoothDamp = 0.1f;
+    float xRotationV = 0;
+    float yRotationV = 0;
+    private float duration;
+    GameObject mainCamera = GameObject.Find("Main Camera");
 
 
     //public IEnumerator setFacing(bool isForced)
@@ -35,7 +35,7 @@ public class Facings
     //    }
     //    else
     //    {
-            
+
     //    }
     //}
 
