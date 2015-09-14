@@ -21,25 +21,28 @@ public class WaypointController : MonoBehaviour
             switch (wp.moveType)
             {
                 case MovementType.STRAIGHTLINE:
-                    Gizmos.DrawLine(wp.point1.position, wp.point2.position);
+                    if(wp.point1 != null && wp.point2 != null)                  // @author: Nathan, created check to remove null reference excepttion error
+                        Gizmos.DrawLine(wp.point1.position, wp.point2.position);
                     break;
 
                 case MovementType.BEZIERCURVE:
                     Gizmos.color = Color.green;
-                    Vector3 lineStarting = wp.point1.transform.position;
-                    for (int i = 1; i <= 1; i++)
+                    if (wp.point1 != null && wp.point2 != null && wp.point3 != null)    // @author: Nathan, created check to remove null reference excepttion error
                     {
-                        Vector3 lineEnd = GetPoint(wp.point1.transform.position, wp.point2.transform.position, wp.point3.transform.position, i / 10f);
-                        Gizmos.DrawLine(lineStarting, lineEnd);
-                        lineStarting = lineEnd;
+                        Vector3 lineStarting = wp.point1.transform.position;
+                        for (int i = 1; i <= 10; i++)
+                        {
+                            Vector3 lineEnd = GetPoint(wp.point1.transform.position, wp.point2.transform.position,
+                                wp.point3.transform.position, i/10f);
+                            Gizmos.DrawLine(lineStarting, lineEnd);
+                            lineStarting = lineEnd;
+                        }
                     }
                     break;
 
                 case MovementType.WAIT:
                     break;
 
-                case MovementType.LOOKCHAIN:
-                    break;
             }
         }
     }
@@ -122,11 +125,14 @@ public class WaypointController : MonoBehaviour
 		switch(wp.moveType)
 		{
 			case MovementType.BEZIERCURVE:
-				break;
+                StartCoroutine(MoveBezierCurve(wp.waypointDuration, wp.point1.transform.position, wp.point2.transform.position,
+                    wp.point3.transform.position));
+                yield return new WaitForSeconds(wp.waypointDuration);
+                break;
 			case MovementType.LOOKANDRETURN:
 				break;
 			case MovementType.STRAIGHTLINE:
-				StartCoroutine(MoveStraightLine(wp.waypointDuration));
+				StartCoroutine(MoveStraightLine(wp.waypointDuration, wp.point1.position, wp.point2.position));
 				yield return new WaitForSeconds(wp.waypointDuration);
 				break;
 			case MovementType.WAIT:
@@ -140,21 +146,28 @@ public class WaypointController : MonoBehaviour
 	} // end method RunMovement
 	
     // Author: Craig Broskow, created skeleton to test concurrent running
-	IEnumerator MoveStraightLine(float moveSeconds)
+    // Modified by: Nathan, added jakes code from ScriptMovementMasterClass
+	IEnumerator MoveStraightLine(float moveSeconds, Vector3 startPos, Vector3 endPos)
 	{
-		float elapsedTime = 0f; // keeps track of elapsed time to continue movement
-		string outputString;
 
-		while (elapsedTime < moveSeconds) // iterate through the loop for moveSeconds seconds
-		{
+        Vector3.Lerp(startPos, endPos, moveSeconds);
 
-
-			elapsedTime += Time.deltaTime;
-			yield return null;
-		}
 		yield return null;
 	} // end method MoveStraightLine
-	
+
+    // Author: Nathan Boehning, created method, implemented Jakes code from ScriptMovementMasterClass and formatted
+    //         to work with this class.
+    IEnumerator MoveBezierCurve(float moveSeconds, Vector3 startPos, Vector3 endPos, Vector3 controlPos)
+    {
+        for (int i = 1; i <= 1; i++)
+        {
+            endPos = GetPoint(startPos, endPos, controlPos, i / 10f);
+            Vector3.Lerp(startPos, endPos, moveSeconds);
+            startPos = endPos;
+        }
+        yield return null;
+    }
+
     // @author: Craig Broskow, created skeleton to test concurrent running
     // Modified for actual facing code by: Nathan Boehning
 	IEnumerator RunFacing(MovementTypes wp)
