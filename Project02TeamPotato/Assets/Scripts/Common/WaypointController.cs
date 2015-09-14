@@ -11,6 +11,8 @@ public class WaypointController : MonoBehaviour
 
     public static  float waitTime = 5;
 
+	public ReadUGC readUGC;
+
     /// <summary>
     /// @author Jake Skov
     /// </summary>
@@ -83,6 +85,10 @@ public class WaypointController : MonoBehaviour
 	{
 		InitCameraEffects(); // initialize the camera effects objects
 
+		readUGC = GetComponent<ReadUGC>();
+		if (readUGC.UGCFileExists())
+			readUGC.LoadUGCFile(ref waypointObjects);
+		
 		StartCoroutine(WaypointEngine()); // process the array of waypoints
 	} // end method Start
 
