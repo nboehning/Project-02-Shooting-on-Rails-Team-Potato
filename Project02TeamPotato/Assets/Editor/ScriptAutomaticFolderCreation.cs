@@ -25,7 +25,8 @@ public class ScriptAutomaticFolderCreation : MonoBehaviour {
         AssetDatabase.CreateFolder("Assets/Dynamic Assets/Resources/Sounds", "SFX");
         AssetDatabase.CreateFolder("Assets/Dynamic Assets/Resources/Sounds/SFX", "Common");
         AssetDatabase.CreateFolder("Assets/Dynamic Assets/Resources", "Textures");
-        AssetDatabase.CreateFolder("Assets/Dynamic Assets/Resources/Textures", "Common");
+		AssetDatabase.CreateFolder("Assets/Dynamic Assets/Resources", "UGC");
+		AssetDatabase.CreateFolder("Assets/Dynamic Assets/Resources/Textures", "Common");
         AssetDatabase.CreateFolder("Assets", "Editor");
 		AssetDatabase.CreateFolder("Assets", "Extensions");
 		AssetDatabase.CreateFolder("Assets", "Gizmos");
