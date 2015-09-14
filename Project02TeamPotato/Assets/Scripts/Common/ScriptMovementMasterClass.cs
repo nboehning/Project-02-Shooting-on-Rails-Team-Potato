@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 using System.Collections;
 
 public class ScriptMovementMasterClass : MonoBehaviour
@@ -31,7 +31,7 @@ public class ScriptMovementMasterClass : MonoBehaviour
                 case MovementType.WAIT:
 
                     break;
-                case MovementType.LOOKCHAIN:
+                //case MovementType.LOOKCHAIN:
 
                     break;
             }
@@ -63,7 +63,7 @@ public class ScriptMovementMasterClass : MonoBehaviour
                     StartCoroutine("WaypointController.WaitTime");
                     Vector3.Lerp(startPos, endPos, time);
                     break;
-                case MovementType.LOOKCHAIN:
+              //  case MovementType.LOOKCHAIN:
 
                     Vector3.Lerp(startPos, endPos, time);
                     break;
@@ -71,3 +71,4 @@ public class ScriptMovementMasterClass : MonoBehaviour
         }
     }
 }
+*/
