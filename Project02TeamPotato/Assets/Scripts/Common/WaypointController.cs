@@ -6,7 +6,11 @@ using System.Text;
 public class WaypointController : MonoBehaviour
 {
     public MovementTypes[] waypointObjects;
-/*
+
+    public Vector3 startPos, endPos;
+
+    public static  float waitTime = 5;
+
     /// <summary>
     /// @author Jake Skov
     /// </summary>
@@ -22,19 +26,19 @@ public class WaypointController : MonoBehaviour
 
                 case MovementType.BEZIERCURVE:
                     Gizmos.color = Color.green;
-                    Vector3 lineStarting = GetPoint();
+                    Vector3 lineStarting = wp.point1.transform.position;
                     for (int i = 1; i <= 1; i++)
                     {
-                        Vector3 lineEnd = GetPoint(startPos, endPos, wp.bezierCurve.position, i / 10f);
+                        Vector3 lineEnd = GetPoint(wp.point1.transform.position, wp.point2.transform.position, wp.point3.transform.position, i / 10f);
                         Gizmos.DrawLine(lineStarting, lineEnd);
                         lineStarting = lineEnd;
                     }
                     break;
 
-                case MovementTypes.LOOKRETURN:
+                case MovementType.WAIT:
                     break;
 
-                case MovementTypes.LOOKCHAIN:
+                case MovementType.LOOKCHAIN:
                     break;
             }
         }
@@ -48,7 +52,7 @@ public class WaypointController : MonoBehaviour
     /// <param name="curve">Sets angle</param>
     /// <param name="t">sets up bezier</param>
     /// <returns>Curve</returns>
-    public Vector3 GetPoint(Vector3 start, Vector3 end, Vector3 curve, float t)
+    public static Vector3 GetPoint(Vector3 start, Vector3 end, Vector3 curve, float t)
     {
         t = Mathf.Clamp01(t);
         float oneMinusT = 1f - t;
@@ -59,11 +63,11 @@ public class WaypointController : MonoBehaviour
     /// @Author Jake Skov
     /// </summary>
     /// <returns>Makes the program wait for waitTime Seconds</returns>
-    public IEnumerator WaitTime()
+    public static IEnumerator WaitTime()
     {
         yield return new WaitForSeconds(waitTime);
     }
-    */
+    
 
     // @author: Craig Broskow
 	private GameObject mainCamera;
